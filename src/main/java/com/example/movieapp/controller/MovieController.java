@@ -1,7 +1,8 @@
 package com.example.movieapp.controller;
 
+import com.example.movieapp.dto.dtorequest.MovieRequest;
+import com.example.movieapp.dto.dtoresponse.MovieResponse;
 import com.example.movieapp.model.Genre;
-import com.example.movieapp.model.Movie;
 import com.example.movieapp.service.MovieService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,51 +18,49 @@ public class MovieController {
 
     private final MovieService movieService;
 
-    // Bütün filmlər
+    // butun
     @GetMapping
-    public ResponseEntity<List<Movie>> getAllMovies() {
-        List<Movie> movies = movieService.getAllMovies();
+    public ResponseEntity<List<MovieResponse>> getAllMovies() {
+        List<MovieResponse> movies = movieService.getAllMovies();
         return ResponseEntity.ok(movies);
     }
 
-    // ID'yə görə film
+    // 🔹 ID
     @GetMapping("/{id}")
-    public ResponseEntity<Movie> getMovieById(@PathVariable Long id) {
-        Movie movie = movieService.getMovieById(id);
+    public ResponseEntity<MovieResponse> getMovieById(@PathVariable Long id) {
+        MovieResponse movie = movieService.getMovieById(id);
         return ResponseEntity.ok(movie);
-
     }
 
-    // Genre'yə görə filmlər
+    // 🔹 Genre
     @GetMapping("/genre")
-    public ResponseEntity<List<Movie>> getMoviesByGenre(@RequestParam String genre) {
-        Genre genreEnum = Genre.valueOf(genre.toUpperCase());
-        List<Movie> movies = movieService.getMoviesByGenre(genreEnum);
+    public ResponseEntity<List<MovieResponse>> getMoviesByGenre(@RequestParam Genre genre) {
+        List<MovieResponse> movies = movieService.getMoviesByGenre(genre);
         return ResponseEntity.ok(movies);
     }
 
-    // Başlığa görə axtarış
+    // ada gore
     @GetMapping("/search")
-    public ResponseEntity<List<Movie>> searchMovies(@RequestParam String title) {
-        List<Movie> movies = movieService.getMoviesByTitle(title);
+    public ResponseEntity<List<MovieResponse>> searchMovies(@RequestParam String title) {
+        List<MovieResponse> movies = movieService.searchMovies(title);
         return ResponseEntity.ok(movies);
     }
 
-    // Yeni film əlavə et
+    // yeni
     @PostMapping
-    public ResponseEntity<Movie> createMovie(@RequestBody Movie movie) {
-        Movie createdMovie = movieService.createMovie(movie);
+    public ResponseEntity<MovieResponse> createMovie(@RequestBody MovieRequest request) {
+        MovieResponse createdMovie = movieService.createMovie(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdMovie);
     }
 
-    // Film yenilə
+    // guncelleme
     @PutMapping("/{id}")
-    public ResponseEntity<Movie> updateMovie(@PathVariable Long id, @RequestBody Movie movie) {
-        Movie updatedMovie = movieService.updateMovie(id, movie);
+    public ResponseEntity<MovieResponse> updateMovie(@PathVariable Long id, @RequestBody MovieRequest request) {
+        MovieResponse updatedMovie = movieService.updateMovie(id, request);
         return ResponseEntity.ok(updatedMovie);
     }
 
-    // Film sil
+    // sil
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteMovie(@PathVariable Long id) {
         movieService.deleteMovie(id);

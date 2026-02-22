@@ -17,11 +17,14 @@ public class Movie {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+
     @Column(nullable = false)
-   private String title;
-   @Column(nullable = false)
-   @Enumerated(EnumType.STRING)
-   private Genre genre;
+    private String title;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Genre genre;
 
    public Movie(String title, Genre genre) {
        this.title = title;

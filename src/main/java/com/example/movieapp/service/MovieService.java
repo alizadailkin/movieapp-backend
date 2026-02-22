@@ -1,7 +1,9 @@
 package com.example.movieapp.service;
 
 
-
+import com.example.movieapp.dto.dtorequest.MovieRequest;
+import com.example.movieapp.dto.dtoresponse.MovieResponse;
+import com.example.movieapp.exception.ResourceNotFoundException;
 import com.example.movieapp.model.Genre;
 import com.example.movieapp.model.Movie;
 import com.example.movieapp.repository.MovieRepository;
@@ -9,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -16,45 +19,65 @@ public class MovieService {
 
     private final MovieRepository movieRepository;
 
-    // butun filmler
-    public List<Movie> getAllMovies(){
-        return movieRepository.findAll();
-    }
-    //id gore filmler
-    public Movie getMovieById(Long id){
-        return movieRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Movie not found with id: " + id));
-    }
-    //janra gore filmer
-    public List<Movie> getMoviesByGenre(Genre genre){
-        return movieRepository.findByGenre(genre);
+    // butun
+    public List<MovieResponse> getAllMovies() {
+        return movieRepository.findAll().stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
     }
 
-    //basliga gore filmeri getirir
-    public List<Movie> getMoviesByTitle(String title){
-        return movieRepository.findByTitleContainingIgnoreCase(title);
-
+    // ID
+    public MovieResponse getMovieById(Long id) {
+        Movie movie = movieRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Movie not found with id: " + id));
+        return mapToResponse(movie);
     }
 
-    //sav elemek ucun
-    public Movie createMovie(Movie movie){
-        return movieRepository.save(movie);
+    // Genre'ye
+    public List<MovieResponse> getMoviesByGenre(Genre genre) {
+        return movieRepository.findByGenre(genre).stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
     }
 
-    // silmek ucun
-    public void deleteMovie(Long id){
-        if (!movieRepository.existsById(id)){
-            throw new RuntimeException("Movie not found with id: " + id);
-        }
-        movieRepository.deleteById(id);
-
+    // title
+    public List<MovieResponse> searchMovies(String title) {
+        return movieRepository.findByTitleContainingIgnoreCase(title).stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
     }
 
-    //yenilemek ucun
-    public Movie updateMovie(Long id, Movie movieDetails) {
-        Movie movie = getMovieById(id);
-        movie.setTitle(movieDetails.getTitle());
-        movie.setGenre(movieDetails.getGenre());
-        return movieRepository.save(movie);
+    // Yeni
+    public MovieResponse createMovie(MovieRequest request) {
+        Movie movie = new Movie(request.getTitle(), request.getGenre());
+        Movie savedMovie = movieRepository.save(movie);
+        return mapToResponse(savedMovie);
+    }
+
+    //  güncelle
+    public MovieResponse updateMovie(Long id, MovieRequest request) {
+        Movie movie = movieRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Movie not found with id: " + id));
+
+        movie.setTitle(request.getTitle());
+        movie.setGenre(request.getGenre());
+        Movie updatedMovie = movieRepository.save(movie);
+        return mapToResponse(updatedMovie);
+    }
+
+    // sil
+    public void deleteMovie(Long id) {
+        Movie movie = movieRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Movie not found with id: " + id));
+        movieRepository.delete(movie);
+    }
+
+    // Entity Response çevir
+    private MovieResponse mapToResponse(Movie movie) {
+        return new MovieResponse(
+                movie.getId(),
+                movie.getTitle(),
+                movie.getGenre().name()
+        );
     }
 }

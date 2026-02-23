@@ -1,98 +1,139 @@
-🎬 Movie App Backend
+# 🎬 Movie App Backend
 
-A simple Spring Boot backend for managing movies, including CRUD operations and genre-based filtering. Built with Java 21, Spring Boot 4.0.0, PostgreSQL, and JPA/Hibernate.
+A simple **Spring Boot REST API** for managing movies with CRUD operations and genre-based filtering.  
+Built with **Java 21, Spring Boot 4, PostgreSQL, and JPA/Hibernate**.
 
-📝 Description
+---
 
-This project provides a RESTful API for a Movie application.
+## 📝 Description
+
+This project provides a RESTful backend for a Movie application.
+
 Users can:
+- List all movies
+- Get movie by ID
+- Search movies by title
+- Filter movies by genre
+- Add new movies
+- Update existing movies
+- Delete movies
 
-List all movies
+Genres are defined using an **Enum**:
 
-Search movies by title
+ACTION
+COMEDY
+DRAMA
+HORROR
+SCI_FI
+FANTASY
+ROMANCE
 
-Filter movies by genre
 
-Add, update, and delete movies
+---
 
-Genres are defined using an Enum (ACTION, COMEDY, DRAMA, HORROR, etc.).
+## ⚙️ Technology Stack
 
-⚙️ Technology Stack
+- Java 21
+- Spring Boot 4
+- Spring Data JPA
+- PostgreSQL
+- Hibernate
+- Lombok
+- Maven
+- Swagger / OpenAPI
 
-Java 21
+---
 
-Spring Boot 4.0.0
+## 🚀 Getting Started
 
-PostgreSQL 15
+### Prerequisites
 
-JPA/Hibernate
+You need to install:
 
-Lombok
+- Java 21
+- PostgreSQL
+- Maven
 
-Maven
+---
 
-🚀 Getting Started
-Prerequisites
-
-Java 21
-
-PostgreSQL installed and running
-
-Maven installed
-
-Installation
+### Installation
 
 Clone the repository:
 
-git clone https://github.com/<your-username>/movie-app-backend.git
-cd movie-app-backend
+```bash
+git clone https://github.com/alizadailkin/movieapp-backend.git
+cd movieapp-backend
+
 
 Configure PostgreSQL in application.properties:
 
 spring.datasource.url=jdbc:postgresql://localhost:5432/movie_db
 spring.datasource.username=postgres
-spring.datasource.password=your_password
+spring.datasource.password=1
+spring.jpa.hibernate.ddl-auto=update
 
-Build and run the application:
+mvn spring-boot:run
 
-./mvnw spring-boot:run
+http://localhost:8080
 
-The backend will run on http://localhost:8080
-.
+📘 API Documentation (Swagger)
+
+After running the project, open:
+http://localhost:8080/swagger-ui/index.html
+You can test all endpoints directly from Swagger UI.
 
 🛠️ API Endpoints
-Method	URL	Description
-GET	/api/movies	Get all movies
-GET	/api/movies/{id}	Get movie by ID
-GET	/api/movies/genre?genre=ACTION	Get movies by genre
-GET	/api/movies/search?title=Inception	Search movies by title
-POST	/api/movies	Add a new movie
-PUT	/api/movies/{id}	Update an existing movie
-DELETE	/api/movies/{id}	Delete a movie
-Example JSON for Adding a Movie
+
+| Method | URL                                | Description            |
+| ------ | ---------------------------------- | ---------------------- |
+| GET    | /api/movies                        | Get all movies         |
+| GET    | /api/movies/{id}                   | Get movie by ID        |
+| GET    | /api/movies/genre/{genre}          | Get movies by genre    |
+| GET    | /api/movies/search?title=Inception | Search movies by title |
+| POST   | /api/movies                        | Add a new movie        |
+| PUT    | /api/movies/{id}                   | Update a movie         |
+| DELETE | /api/movies/{id}                   | Delete a movie         |
+
+Example JSON (Create Movie)
 {
   "title": "Avengers: Endgame",
   "genre": "ACTION"
 }
+
 📂 Project Structure
-movie-app-backend/
+movieapp-backend
 │
-├─ src/main/java/com/example/movieapp/
-│   ├─ controller/   # REST controllers
-│   ├─ service/      # Business logic
-│   ├─ repository/   # JPA repositories
-│   ├─ model/        # Entities and Enums
-│   └─ MovieAppApplication.java
+├── src/main/java/com/example/movieapp
+│   ├── controller
+│   ├── service
+│   ├── repository
+│   ├── model
+│   ├── dto
+│   ├── exception
+│   └── config
 │
-├─ src/main/resources/
-│   └─ application.properties
+├── src/main/resources
+│   └── application.properties
 │
-├─ pom.xml
-└─ README.md
-⚡ Notes
+├── pom.xml
+└── README.md
 
-The project uses HikariCP for database connection pooling.
 
-Enum-based genres allow easy filtering of movies.
+✨ Features
 
-Spring Security can be added later for authentication if needed.
+Clean layered architecture
+
+DTO Request / Response structure
+
+Global Exception Handling
+
+Enum-based movie genres
+
+Swagger API documentation
+
+PostgreSQL integration
+
+👨‍💻 Author
+
+Ilkin Alizada
+Java Backend Developer

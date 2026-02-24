@@ -7,9 +7,11 @@ import com.example.movieapp.exception.ResourceNotFoundException;
 import com.example.movieapp.model.Users;
 import com.example.movieapp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -20,6 +22,8 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;// şifreleme üçün
+
 
     // butun istifadeceiler pagination formatinda
     public Page<UserResponse> getAllUsers(int page, int size) {
@@ -54,7 +58,7 @@ public class UserService {
 
         Users user = new Users();
         user.setUsername(request.getUsername());
-        user.setPassword(request.getPassword());
+        user.setPassword(passwordEncoder.encode(request.getPassword())); // şifreleme
         user.setEmail(request.getEmail());
         user.setCreatedAt(LocalDateTime.now());
 
@@ -78,7 +82,7 @@ public class UserService {
         }
 
         existingUser.setUsername(request.getUsername());
-        existingUser.setPassword(request.getPassword());
+        existingUser.setPassword(passwordEncoder.encode(request.getPassword())); // şifreleme
         existingUser.setEmail(request.getEmail());
 
         Users updatedUser = userRepository.save(existingUser);

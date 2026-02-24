@@ -11,4 +11,7 @@ public class MovieResponse {
     private Long id;
     private String title;
     private String genre;
+    private Integer year;
+    private Double rating;
+
 }

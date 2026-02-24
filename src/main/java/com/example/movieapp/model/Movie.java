@@ -26,9 +26,18 @@ public class Movie {
     @Enumerated(EnumType.STRING)
     private Genre genre;
 
-   public Movie(String title, Genre genre) {
-       this.title = title;
-       this.genre = genre;
+    @Column(name ="year")
+    private Integer year;
+    @Column(name ="rating")
+    private Double Rating;
+
+        public Movie(String title, Genre genre, Integer year, Double rating) {;
+        this.title = title;
+        this.genre = genre;
+        this.year = year;
+        this.Rating = rating;
+
+
    }
 
 }

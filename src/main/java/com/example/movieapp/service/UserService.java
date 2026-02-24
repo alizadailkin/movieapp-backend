@@ -7,6 +7,9 @@ import com.example.movieapp.exception.ResourceNotFoundException;
 import com.example.movieapp.model.Users;
 import com.example.movieapp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -18,12 +21,11 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    // butun istifadeceiler
-    public List<UserResponse> getAllUsers() {
-        return userRepository.findAll()
-                .stream()
-                .map(this::mapToResponse)
-                .toList();
+    // butun istifadeceiler pagination formatinda
+    public Page<UserResponse> getAllUsers(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return userRepository.findAll(pageable)
+                .map(this::mapToResponse);
     }
 
     // ID ile

@@ -1,10 +1,13 @@
 package com.example.movieapp.controller;
 
+import com.example.movieapp.dto.dtorequest.MovieFilterDto;
 import com.example.movieapp.dto.dtorequest.MovieRequest;
 import com.example.movieapp.dto.dtoresponse.MovieResponse;
-import com.example.movieapp.model.Genre;
+import com.example.movieapp.dto.dtoresponse.PageResponse;
 import com.example.movieapp.service.MovieService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,11 +21,25 @@ public class MovieController {
 
     private final MovieService movieService;
 
-    // butun
+    // butun filmler pagination/Specification formatinda
     @GetMapping
-    public ResponseEntity<List<MovieResponse>> getAllMovies() {
-        List<MovieResponse> movies = movieService.getAllMovies();
-        return ResponseEntity.ok(movies);
+    public PageResponse<MovieResponse> getAllMovies(
+            @RequestParam(required = false) Integer year,
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String genre,
+            @RequestParam(required = false) Double Minrating,
+            @RequestParam(required = false) Double Maxrating,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        MovieFilterDto filterDto = new MovieFilterDto();
+        filterDto.setTitle(title);
+        filterDto.setYear(year);
+        filterDto.setGenre(genre);
+        filterDto.setMinRating(Minrating);
+        filterDto.setMaxRating(Maxrating);
+        return movieService.getAllMovies(filterDto, pageable);
     }
 
     // 🔹 ID
@@ -32,11 +49,10 @@ public class MovieController {
         return ResponseEntity.ok(movie);
     }
 
-    // 🔹 Genre
-    @GetMapping("/genre")
-    public ResponseEntity<List<MovieResponse>> getMoviesByGenre(@RequestParam Genre genre) {
-        List<MovieResponse> movies = movieService.getMoviesByGenre(genre);
-        return ResponseEntity.ok(movies);
+    // Genreler
+    @GetMapping("/genres")
+    public ResponseEntity<List<String>> getAllGenres() {
+        return ResponseEntity.ok(movieService.getAllGenres());
     }
 
     // ada gore

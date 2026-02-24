@@ -18,6 +18,8 @@ public class MovieRequest {
     @NotNull(message = "Genre is required")
     private Genre genre;
 
+    private Integer year;
+    private Double rating;
 
 
 }

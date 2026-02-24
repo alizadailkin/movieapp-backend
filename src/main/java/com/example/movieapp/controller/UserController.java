@@ -4,6 +4,7 @@ import com.example.movieapp.dto.dtorequest.UserRequest;
 import com.example.movieapp.dto.dtoresponse.UserResponse;
 import com.example.movieapp.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,11 +18,12 @@ public class UserController {
 
     private final UserService userService;
 
-    // butun
+    // butun istifadeciler pagination formatinda
     @GetMapping
-    public ResponseEntity<List<UserResponse>> getAllUsers() {
-        List<UserResponse> users = userService.getAllUsers();
-        return ResponseEntity.ok(users);
+    public ResponseEntity<Page<UserResponse>> getAllUsers(
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size){
+        return ResponseEntity.ok(userService.getAllUsers(page, size));
     }
 
     // id

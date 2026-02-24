@@ -13,7 +13,7 @@ Users can:
 - List all movies
 - Get movie by ID
 - Search movies by title
-- Filter movies by genre
+- List all genres
 - Add new movies
 - Update existing movies
 - Delete movies
